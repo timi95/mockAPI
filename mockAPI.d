@@ -1,5 +1,9 @@
-import std.math;
 import std.stdio;
+import std.conv;
+import std.traits;
+import std.file;
+import std.path;
+import std.math;
 import std.string;
 import std.array;
 import std.regex;
@@ -25,6 +29,36 @@ class UserDetail{
         assert(money < total_money);
         writeln("\n\nUserDetail object has been initialised successfully! \n\n");
     }
+// REFLECTION IMPLEMENT
+    string call(string methodName, string[] args){
+        method_switch: switch(methodName){
+            static foreach(inspecting; __traits(allMembers, typeof(this))){
+                case inspecting:
+                    static if(isCallable!(__traits(getMember, this, inspecting))){
+                        auto callable = &__traits(getMember, this, inspecting);
+
+                        Parameters!callable arguments;
+                        foreach(i, ref arg; arguments){
+                            static if(__traits(compiles, to!(typeof(arg)) (args[i])))
+                                arg = to!(typeof(arg))(args[i]);
+                            else
+                                throw new Exception("method "~methodName~"not callable with this reflection code because of incompatible argument type");
+                        }
+                        static if(is(ReturnType!callable == void)) {
+                            callable(arguments);
+                            return null;
+                        } else 
+                        { return to!string(callable(arguments)); }
+                    }
+                break method_switch;
+            }
+            default:
+                throw new Exception("not such method" ~ methodName);
+        }
+        assert(0); // not reached
+    }
+// REFLECTION IMPLEMENT
+
 }
 struct API_object{
     // date 
@@ -71,33 +105,68 @@ auto setObject(API_object* api_object, Object userObject){
 // }
 
 bool shell_execute(string args){
+    API_object* api_obj;
     switch(args){
         case "createObject\n":
-            auto api_obj = createObject();
+            api_obj = createObject();
             writeln( "String of Object: ",Object.stringof,
             "\nSize of Object: ", Object.sizeof,
             "\nAuto api_obj value: ", api_obj.date_str);
             api_obj.prinContent(api_obj.date_str);
+            log_Event();
             return true;
         break;
 
         case "deleteObject\n":
-            auto api_obj = createObject();
+            // auto api_obj = createObject();
             deleteObject(api_obj);
+            // api_obj.call("",[]).deleteObject();
             writeln("Object Deleted!");
-            
+            log_Event();
+            return true;
         break;
 
         case "setObject\n":
+            if(api_obj){
             // set Object function usage.
-            auto api_obj = createObject();
-            UserDetail usrDetail = new UserDetail("Bob", "userAge", ["bob@email.com","070123456999"], 15, 1000.0);
-            writeln("Object has been set as: ",setObject( api_obj, usrDetail) );
+            write("set User Name>> ");
+            string userName = readln();
+
+            write("set User Age>> "); 
+            string userAge= readln();
+
+            // write("set User Contact>> ");
+            // string[] userContacts;
+
+            write("set User Money>> ");
+            double money ; 
+            readf!" %f\n"(money); 
+            
+            write("set Total Money>> ");
+            double total_money ; 
+            readf!" %f\n"(total_money); 
+
+            // auto api_obj = createObject();
+            UserDetail usrDetail = new UserDetail(userName, userAge, ["bob@email.com","070123456999"], money, total_money);
+            writeln("Object has been set as: ",setObject( api_obj, usrDetail));
+            writeln("userName: ",usrDetail.userName);
+            writeln("userAge: ",usrDetail.userAge);
+            writeln("money: ",usrDetail.money);
+            writeln("TotalMoney: ",total_money);
+            log_Event();
+            return true;
+            }else{ writeln("ERROR object is [",api_obj,"] and does not exist !"); return true;}
+
+        break;
+
+        case "exit\n":
+            write("\n Bye :D <3 ! \n\n");
+            return false;
         break;
 
         default:
-            write(args,": is not a valid command.\n");
-            return false;
+            write("",args,": is not a valid command.\n");
+            return true;
         break;
     }
         return true;
@@ -109,29 +178,28 @@ void shell()
   int status;
 
   do {
-    printf("running my shell :>> ");
+    write("running my shell :>> ");
     line = readln();
     status = shell_execute(line);
   } while (status);
     destroy(line);
     destroy(args);
 }
+void log_Event(){
+    // WRITE THE FILE.
 
+    string file_str = "Shell_Log.txt";
+    if ( file_str.exists() )
+    { writeln("Event has been logged..."); }
+    else
+    { writeln("file doesn't exist"); }
+
+}
 
 
 void main(){
-    /*SHELL ACTIVATION*/
+    //RUN SHELL PROCEDURE
     shell();
-//     auto api_obj = createObject();
-//    writeln( "String of Object: ",Object.stringof,
-//             "\nSize of Object: ", Object.sizeof,
-//             "\nAuto api_obj value: ", api_obj.date_str);
-//             api_obj.prinContent(api_obj.date_str);
-    
-    // // set Object function usage.
-    // UserDetail usrDetail = new UserDetail("Bob", "userAge", ["bob@email.com","070123456999"], 15, 1000.0);
-    // writeln("Object has been set as: ",setObject( api_obj, usrDetail) );
-
     // Asyncronous file record creation section
 
     // Asyncronous file record creation section
