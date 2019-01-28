@@ -78,7 +78,7 @@ struct API_object{
 }
 
 // object cache   API_object* api_obj;
-API_object*[string] api_obj;
+API_object*[string] api_obj; // object singleton!
 
 void createObject(){
     //Object Creation
@@ -97,7 +97,7 @@ void printObjects(){
             writeln(" Cache item [ ",element.data_s," ] ");
         }
 
-    } else{
+    } else {
         writeln("Object cache is empty");
     }
 
@@ -109,24 +109,21 @@ void deleteObject(string key){
     writeln("Delete operation complete...");
 }
 
-// void setObject(){
-//     writeln("setObject function has been activated!");
-//     // set struct attributes
-//     string property = read();
-//     switch(property){
-        
-//         case "Name"||"name":
+void setObject(){
+    writeln("setObject function has been activated!");
+    write("Enter object name: ");
+    string key = readln();
+    if(api_obj[key]){
+        writeln(" Enter updates to apply: ");
+        string new_str = readln();
+        api_obj[key].data_s = new_str;
+    } else {
+        writeln("No such Object as ",key," Exists");
+    }
 
-//         break;
-        
-//         default:
-//         write("No valid property chosen to be set\n");
-//         break;
-
-//     }
-//     // return api_object
-//     return api_object;
-// }
+    writeln("Objects property ", api_obj[key].data_s," has been set.");
+    
+}
 
 bool shell_execute(string args){
     
@@ -152,9 +149,9 @@ bool shell_execute(string args){
             printObjects();
         break;
         
-        // case "setObject\n":
-        //     setObject();
-        // break;
+        case "setObject\n":
+            setObject();
+        break;
 
         case "exit\n":
             write("\n Bye :D <3 ! \n\n");
