@@ -59,6 +59,7 @@ class UserDetail{
 // REFLECTION IMPLEMENT
 
 }
+
 struct API_object{
     // date 
     string date_str= __TIMESTAMP__;
@@ -69,7 +70,7 @@ struct API_object{
     string data_s ;
     Object data_o;
     // print function
-    string prinContent(string date_str){
+    string printContent(string date_str) {
         writeln("printContent function activated!\n");
         writeln("printContent timestamp: ",date_str); 
         return date_str;
@@ -90,7 +91,7 @@ void createObject(){
     //return api_obj;
 }
 
-void printObjects(){
+void listObjects(){
     if(api_obj != null ){
         
         foreach( element; api_obj){
@@ -111,10 +112,10 @@ void deleteObject(string key){
 
 void setObject(){
     writeln("setObject function has been activated!");
-    write("Enter object name: ");
+    write("Enter object name to be set: ");
     string key = readln();
     if(api_obj[key]){
-        writeln(" Enter updates to apply: ");
+        writeln(" Enter new object name to be set: ");
         string new_str = readln();
         api_obj[key].data_s = new_str;
     } else {
@@ -146,7 +147,7 @@ bool shell_execute(string args){
         break;
 
         case "printObjects\n":
-            printObjects();
+            listObjects();
         break;
         
         case "setObject\n":
