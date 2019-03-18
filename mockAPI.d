@@ -129,6 +129,14 @@ void setObject(){
 bool shell_execute(string args){
     
     switch(args){
+        case "help\n":
+            write("The commands:\n",
+            "createObject: creates a new object.\n",
+            "deleteObject: deletes an existing object.\n",
+            "listObject: lists all existing objects.\n",
+            "exit: exits the program.\n",
+            "These commands are case sensitive, invalid commands will be ignored.");
+        break;
         
         case "createObject\n":
             createObject();
@@ -146,7 +154,7 @@ bool shell_execute(string args){
             return true;
         break;
 
-        case "printObjects\n":
+        case "listObjects\n":
             listObjects();
         break;
         
