@@ -127,7 +127,7 @@ void setObject(){
 }
 
 bool shell_execute(string args){
-    
+    fileWriting("Hello");
     switch(args){
         case "help\n":
             write("The commands:\n",
@@ -140,7 +140,7 @@ bool shell_execute(string args){
         
         case "createObject\n":
             createObject();
-            log_Event();
+            log_Event("Object created at: "~__TIMESTAMP__);
             return true;
         break;
 
@@ -150,20 +150,23 @@ bool shell_execute(string args){
             auto name = readln();
             deleteObject(name);
             writeln("Object ",name," has been deleted!");
-            log_Event();
+            log_Event("Object deleted at: "~__TIMESTAMP__);
             return true;
         break;
 
         case "listObjects\n":
             listObjects();
+            log_Event("Objects listed at: "~__TIMESTAMP__);
         break;
         
         case "setObject\n":
             setObject();
+            log_Event("Object value modified at: "~__TIMESTAMP__);
         break;
 
         case "exit\n":
             write("\n Bye :D <3 ! \n\n");
+            log_Event("Exiting program at : "~__TIMESTAMP__);
             return false;
         break;
 
@@ -188,18 +191,32 @@ void shell()
     destroy(line);
     destroy(args);
 }
-void log_Event(){
-    // WRITE THE FILE.
 
+void log_Event(string event_str ){
+    // WRITE THE FILE.
+    
     string file_str = "Shell_Log.txt";
     if ( file_str.exists() )
-    { writeln("Event has been logged..."); }
+    { 
+        File file_writable;
+        file_writable = File(file_str,"a+");
+        file_writable. writeln( event_str,"Event has been logged..." ); 
+        writeln("Event has been logged..."); 
+    }
     else
-    { writeln("file doesn't exist"); }
+    { 
+        writeln("file doesn't exist"); 
+
+    }
 
 }
 
-
+void fileWriting(string a ) {
+    // write(NewFile, a) ;
+    File file = File("NewFile.txt","w");
+    file.writeln(a);
+    file.close(); 
+}
 void main(){
     //RUN SHELL PROCEDURE
     shell();
