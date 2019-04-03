@@ -8,6 +8,7 @@ import std.string;
 import std.array;
 import std.regex;
 import std.datetime;
+import std.process;
 
 /*
  Create a File Database, to which Tuple operations will be written to;
@@ -78,8 +79,19 @@ struct API_object{
     // immutable Auditable tuple record of creation or deletion
 }
 
+ auto createObject_Two(){
+    //Object Creation
+    write("Enter object name: ");
+    string key = readln();
+    api_obj[key] = new API_object() ;
+    api_obj[key].data_s = key;
+    writeln("A new API_Object has been created at, ",__TIMESTAMP__);
+   return api_obj;
+	
+}
+
 // object cache   API_object* api_obj;
-API_object*[string] api_obj; // object singleton!
+API_object*[string] api_obj; // object singleton
 
 void createObject(){
     //Object Creation
@@ -133,7 +145,8 @@ bool shell_execute(string args){
             write("The commands:\n",
             "createObject: creates a new object.\n",
             "deleteObject: deletes an existing object.\n",
-            "listObject: lists all existing objects.\n",
+            "listObjects: lists all existing objects.\n",
+            "setObject: sets an Object.\n",
             "exit: exits the program.\n",
             "These commands are case sensitive, invalid commands will be ignored.");
         break;
@@ -162,6 +175,11 @@ bool shell_execute(string args){
         case "setObject\n":
             setObject();
             log_Event("Object value modified at: "~__TIMESTAMP__);
+        break;
+
+        case "clear\n":
+            auto pid = spawnProcess("clear");
+            scope(exit) wait(pid);
         break;
 
         case "exit\n":
