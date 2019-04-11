@@ -9,6 +9,7 @@ import std.array;
 import std.regex;
 import std.datetime;
 import std.process;
+import std.parallelism;
 
 /*
  Create a File Database, to which Tuple operations will be written to;
@@ -124,24 +125,33 @@ void deleteObject(string key){
 
 void setObject(){
     writeln("setObject function has been activated!");
-    write("Enter object name to be set: ");
-    string key = readln();
-    if(api_obj[key]){
-        writeln(" Enter new object name to be set: ");
-        string new_str = readln();
-        api_obj[key].data_s = new_str;
+
+    if (api_obj) {
+        write("Enter object name to be set: ");
+        string key = readln();
+        if( key == "\n" || key == null || !key){
+            write("Invalid name value entered\n");
+            
+        } 
+        else if (api_obj[key]){
+            writeln(" Enter new object name to be set: ");
+            string new_str = readln();
+            api_obj[key].data_s = new_str;
+            writeln("Objects property ", api_obj[key].data_s," has been set.");
+        } 
+
     } else {
-        writeln("No such Object as ",key," Exists");
+        writeln("No objects exist in the cache, create them with \"createObject\" before using this command.");
     }
 
-    writeln("Objects property ", api_obj[key].data_s," has been set.");
+    
     
 }
 
 bool shell_execute(string args){
     fileWriting("Hello");
     switch(args){
-        case "help\n":
+        case "help\n": { 
             write("The commands:\n",
             "createObject: creates a new object.\n",
             "deleteObject: deletes an existing object.\n",
@@ -149,15 +159,17 @@ bool shell_execute(string args){
             "setObject: sets an Object.\n",
             "exit: exits the program.\n",
             "These commands are case sensitive, invalid commands will be ignored.");
+        }
         break;
         
-        case "createObject\n":
+        case "createObject\n":{
             createObject();
             log_Event("Object created at: "~__TIMESTAMP__);
             return true;
+        }
         break;
 
-        case "deleteObject\n":
+        case "deleteObject\n": {
             // auto api_obj = createObject();
             write("Object name to delete: ");
             auto name = readln();
@@ -165,27 +177,32 @@ bool shell_execute(string args){
             writeln("Object ",name," has been deleted!");
             log_Event("Object deleted at: "~__TIMESTAMP__);
             return true;
+            }
         break;
 
-        case "listObjects\n":
+        case "listObjects\n":{
             listObjects();
             log_Event("Objects listed at: "~__TIMESTAMP__);
+        }
         break;
         
-        case "setObject\n":
+        case "setObject\n":{
             setObject();
             log_Event("Object value modified at: "~__TIMESTAMP__);
+        }
         break;
 
-        case "clear\n":
+        case "clear\n":{
             auto pid = spawnProcess("clear");
             scope(exit) wait(pid);
+        }
         break;
 
-        case "exit\n":
+        case "exit\n":{
             write("\n Bye :D <3 ! \n\n");
             log_Event("Exiting program at : "~__TIMESTAMP__);
             return false;
+        }
         break;
 
         default:
@@ -236,6 +253,7 @@ void fileWriting(string a ) {
     file.close(); 
 }
 void main(){
+	writeln("totalCPU amount: ",totalCPUs);
     //RUN SHELL PROCEDURE
     shell();
     // Asyncronous file record creation section
