@@ -30,36 +30,6 @@ class UserDetail{
         assert(money < total_money);
         writeln("\n\nUserDetail object has been initialised successfully! \n\n");
     }
-// REFLECTION IMPLEMENT
-    // string call(string methodName, string[] args){
-    //     method_switch: switch(methodName){
-    //         static foreach(inspecting; __traits(allMembers, typeof(this))){
-    //             case inspecting:
-    //                 static if(isCallable!(__traits(getMember, this, inspecting))){
-    //                     auto callable = &__traits(getMember, this, inspecting);
-
-    //                     Parameters!callable arguments;
-    //                     foreach(i, ref arg; arguments){
-    //                         static if(__traits(compiles, to!(typeof(arg)) (args[i])))
-    //                             arg = to!(typeof(arg))(args[i]);
-    //                         else
-    //                             throw new Exception("method "~methodName~"not callable with this reflection code because of incompatible argument type");
-    //                     }
-    //                     static if(is(ReturnType!callable == void)) {
-    //                         callable(arguments);
-    //                         return null;
-    //                     } else 
-    //                     { return to!string(callable(arguments)); }
-    //                 }
-    //             break method_switch;
-    //         }
-    //         default:
-    //             throw new Exception("not such method" ~ methodName);
-    //     }
-    //     assert(0); // not reached
-    // }
-// REFLECTION IMPLEMENT
-
 }
 
 struct API_object{
