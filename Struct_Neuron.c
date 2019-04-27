@@ -109,27 +109,28 @@ double  bb_ANN(int num_Weights, int num_Layers, int num_Nodes, double * inputs)
 	// ^ testing the formed array structure and making a fully connected networks from it
 	return outputs;
 }
+
 //////// ^^^ /////////
 int main(int argc) 
 {
-	  srand(time(NULL));//seed random values
+	srand(time(NULL));//seed random values
 
-	  //black box testing
-	 //printf("\n Black Box testing ! ... \n");
-	 int val = 3;
+	//black box testing
+	//printf("\n Black Box testing ! ... \n");
+	int val = 3;
 	int numWeights2 = val;
 	int num_Layers = val;
 	int num_Nodes = val;
 	int num_Inputs = val; 
 
-	 double *inputs;
-	 inputs = malloc(num_Inputs * sizeof(double));
-	 for(int i=0;i<num_Inputs;i++) //(struct ANN_Node **) malloc(sizeof(struct ANN_Node *) *i)
-	 {
-	 	inputs[i]= (double)rand()/(double)(RAND_MAX/1);//problem here
-	 	printf("input value->: %f \n",inputs[i]);
-	 	// printf("hello");
-	 } printf("\n< - - s p a c i n g - - >\n \n");
+	double *inputs;
+	inputs = malloc(num_Inputs * sizeof(double));
+	for(int i=0;i<num_Inputs;i++) //(struct ANN_Node **) malloc(sizeof(struct ANN_Node *) *i)
+	{
+		inputs[i]= (double)rand()/(double)(RAND_MAX/1);//problem here
+		printf("input value->: %f \n",inputs[i]);
+		// printf("hello");
+	} printf("\n< - - s p a c i n g - - >\n \n");
 	  
 
 	//create an array that will hold pointers

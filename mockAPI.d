@@ -64,14 +64,14 @@ struct API_object{
 // object cache   API_object* api_obj;
 API_object*[string] api_obj; // object singleton
 
-void createObject(){
+API_object* createObject(){
     //Object Creation
     write("Enter object name: ");
     string key = readln();
     api_obj[key] = new API_object() ;
     api_obj[key].data_s = key;
     writeln("A new API_Object has been created at, ",__TIMESTAMP__);
-    //return api_obj;
+    return api_obj[key];
 }
 
 void listObjects(){
