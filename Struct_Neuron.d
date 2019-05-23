@@ -62,6 +62,23 @@ void main()
 	n1.output.writeln;
 
 	Neuron[][] topology;
+	Neuron[] layer;
+	
+	for(int i=0;i<10;i++)
+	{
+		Neuron node = new Neuron(weights, inputs);
+		layer ~= node;
+	}
+	
+	for(int i=0;i<3;i++)
+	{ 
+		topology ~= layer;
+		writeln("layer length: ",topology[i].length);
+		writeln("layer level: ", topology.length);
+	}
+
+
+
 
 	
 }
