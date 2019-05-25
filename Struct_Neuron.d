@@ -14,44 +14,84 @@ int numInputs(int a) { return a; }
 //Struct neuron model [inputs, sigmoid, output]
 class Neuron {
 
+		double[] inputs;
+		double[] weights;
+
+		double output;
+
+		double sigmoid(double input) {
+
+			input = 1/(1+exp(input * (-1) ));
+			double output = input;
+
+			return output;
+		}
+
+	// sum the product of all weights and inputs
+		double sumProd(double[] all_weights, double[] all_inputs) {
+
+			assert(all_weights.length == all_inputs.length);
+			double sum = 0.0;
+	        for(int i=0;i<all_inputs.length;i++) {
+	            sum += all_weights[i]*all_inputs[i];
+	        }
+
+			return sum;
+		}
+
+		double getOutput(){
+			return this.output;
+		}
+
+		this(double[] weights, double[] inputs ) {
+			this.inputs = inputs;
+			this.weights = weights;
+			// f(x) = activateFunc(sum(prod(all_weights, all_inputs)))
+			this.output = sigmoid(sumProd(weights, inputs));
+
+		}
+
+}
+
+
+
+class NeuralNetwork {
+	Neuron[][] topology;
+	Neuron[] layer;
 	double[] inputs;
 	double[] weights;
 
-	double output;
-
-	double sigmoid(double input) {
-
-		input = 1/(1+exp(input * (-1) ));
-		double output = input;
-
-		return output;
+	// returns a neuron
+	auto neuronFactory(	double[] weights, double[] inputs){
+		return new Neuron(weights, inputs);
 	}
 
-// sum the product of all weights and inputs
-	double sumProd(double[] all_weights, double[] all_inputs) {
 
-		assert(all_weights.length == all_inputs.length);
-		double sum = 0.0;
-        for(int i=0;i<all_inputs.length;i++) {
-            sum += all_weights[i]*all_inputs[i];
-        }
-
-		return sum;
+// adds neurons to a layer
+	auto populateLayer(L...)(L Sizes){ // an attempted hack in the absence of optional params
+		if(Sizes.length==0 || !Sizes)
+		{ layer ~= neuronFactory(inputs,weights); }
+		if(Sizes.length > 1)
+		{ writeln("populateLayer() takes up to one argument"); return ;}
+		else {
+				writeln("Populating Layer");
+				foreach(size; Sizes){
+					// adding nodes to the layer
+					for(int i=0 ; i < size ; i++)
+					{ layer ~= neuronFactory(inputs,weights); }
+				}
+		}
+		return layer;
 	}
 
-	double getOutput(){
-		return this.output;
+	void populateTopology(){
+		// adding layers to the topology
+		// for(int i = 0; i<)
+		return topology;
 	}
 
-	this(double[] weights, double[] inputs ) {
-		this.inputs = inputs;
-		this.weights = weights;
-		// f(x) = activateFunc(sum(prod(all_weights, all_inputs)))
-		this.output = sigmoid(sumProd(weights, inputs));
 
-	}
 }
-
 
 void main()
 {
