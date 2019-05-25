@@ -11,11 +11,9 @@ import std.parallelism;
 
 int numInputs(int a) { return a; }
 
-
-
 //Struct neuron model [inputs, sigmoid, output]
 class Neuron {
-	
+
 	double[] inputs;
 	double[] weights;
 
@@ -25,20 +23,24 @@ class Neuron {
 
 		input = 1/(1+exp(input * (-1) ));
 		double output = input;
-		
+
 		return output;
 	}
 
+// sum the product of all weights and inputs
 	double sumProd(double[] all_weights, double[] all_inputs) {
 
 		assert(all_weights.length == all_inputs.length);
 		double sum = 0.0;
         for(int i=0;i<all_inputs.length;i++) {
-
             sum += all_weights[i]*all_inputs[i];
         }
 
 		return sum;
+	}
+
+	double getOutput(){
+		return this.output;
 	}
 
 	this(double[] weights, double[] inputs ) {
@@ -46,10 +48,9 @@ class Neuron {
 		this.weights = weights;
 		// f(x) = activateFunc(sum(prod(all_weights, all_inputs)))
 		this.output = sigmoid(sumProd(weights, inputs));
-		
-	}
 
-}; 
+	}
+}
 
 
 void main()
@@ -63,46 +64,30 @@ void main()
 
 	Neuron[][] topology;
 	Neuron[] layer;
-	
+
+// adding nodes to the layer
 	for(int i=0;i<10;i++)
 	{
 		Neuron node = new Neuron(weights, inputs);
 		layer ~= node;
 	}
-	
+
+// adding layers to the topology
 	for(int i=0;i<3;i++)
-	{ 
+	{
 		topology ~= layer;
 		writeln("layer length: ",topology[i].length);
-		writeln("layer level: ", topology.length);
+		writeln("number of layers: ", topology.length);
 	}
 
+	int count = 1;
+	for ( int i=0; i<topology.length ;i++ ) {
+		writeln("\n LAYER [",i,"] ! \n");
+		for ( int j=0; j<topology[i].length ; j++, count++ ) {
+			write("count[",count,"] ->");
+			topology[i][j].getOutput.writeln;
+		}
+	}
+	// writeln();
 
-
-
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
