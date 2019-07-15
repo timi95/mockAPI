@@ -11,8 +11,8 @@ double sigmoid(double input)
 {
 	input = 1/(1+exp(input * (-1) )); // check the exponential function in C
 	double output = input;
-	
-return output;
+
+	return output;
 }
 
 //Struct neuron model [inputs, sigmoid, output]
@@ -25,7 +25,7 @@ struct ANN_Node {
    double output;
    //double (*sigmoid)(double); // instant segfault, functions like to be outside of structs
    struct ANN_Node *next;
-}; 
+};
 
 
 struct ANN_Node* ANN_Init_Node(int a)
@@ -33,24 +33,24 @@ struct ANN_Node* ANN_Init_Node(int a)
 	//create one node and allocate memory for it
 	struct ANN_Node * node = malloc(sizeof(struct ANN_Node));
 	node->numInputs = a; //initialize its inputs
-	
+
 	node->weights = malloc(sizeof(double)*a); // look at this once more
 	for(int i=0;i < a; i++)
 	{
 		float x = (float)rand()/(float)(RAND_MAX/1);//random float values between 0 and 1
 		node->weights[i] = x;//initialize with random values
 	}
-	
-	return node; 
+
+	return node;
 }
 
 void push_ANN_Node(struct ANN_Node** head,int numWeights)
 {
 	struct ANN_Node* newNode =  ANN_Init_Node(numWeights);
-	
+
 	newNode->numInputs=numWeights;
 	newNode->next=*head;
-	
+
 	*head = newNode;
 }
 
@@ -76,23 +76,23 @@ struct ANN_Node **arrayOfList(struct ANN_Node *listP)
 	return ptr;
 }
 ///////////////the blackbox of neurons/////////////////
-//for a fully connected  network, 'numWeights' can be the number of neurons in the preceding layer	
+//for a fully connected  network, 'numWeights' can be the number of neurons in the preceding layer
 double  bb_ANN(int num_Weights, int num_Layers, int num_Nodes, double * inputs)
 {
-	
+
 	//create an array that will hold pointers
 	struct ANN_Node *layer[num_Layers];
 	//create an array of nodes
 	struct ANN_Node ***arr = malloc(sizeof(struct ANN_Node **) *num_Layers);
 	//initialize Nodes
 	for(int i=0;i<num_Layers;i++)
- 	{	
+ 	{
 		layer[i] = ANN_Init_Node(num_Weights); // layer heads
 		for(int j=0; j<num_Nodes;j++)
 		{ push_ANN_Node(&layer[i],num_Weights); }//push nodes into each layer head
-		arr[i] = arrayOfList(layer[i]); // converting each list into an array, then each embedding into arr[] 
+		arr[i] = arrayOfList(layer[i]); // converting each list into an array, then each embedding into arr[]
 	}
-	
+
 	////////////// f(x) = sum(prod(all_weights, all_inputs))
 	printf("\nf(x) = sum(prod(all_weights, all_inputs))\n\n");
 	for(int i=0; i< num_Layers; i++)
@@ -100,9 +100,9 @@ double  bb_ANN(int num_Weights, int num_Layers, int num_Nodes, double * inputs)
 		{ for(int k=0; k< (double) sizeof(double*)/sizeof(arr[i][j]->weights[k]); k++)
 			{
 				arr[i][j]->weights[k]+= arr[i][j]->weights[k] * inputs[i];
-				printf("f(x):%f ", arr[i][j]->weights[k] * inputs[i]);	
-			} 
-		} 
+				printf("f(x):%f ", arr[i][j]->weights[k] * inputs[i]);
+			}
+		}
 		printf("\n");
 	}
 	double outputs = sigmoid(arr[0][0]->weights[0]);
@@ -111,7 +111,7 @@ double  bb_ANN(int num_Weights, int num_Layers, int num_Nodes, double * inputs)
 }
 
 //////// ^^^ /////////
-int main(int argc) 
+int main(int argc)
 {
 	srand(time(NULL));//seed random values
 
@@ -121,7 +121,7 @@ int main(int argc)
 	int numWeights2 = val;
 	int num_Layers = val;
 	int num_Nodes = val;
-	int num_Inputs = val; 
+	int num_Inputs = val;
 
 	double *inputs;
 	inputs = malloc(num_Inputs * sizeof(double));
@@ -131,16 +131,15 @@ int main(int argc)
 		printf("input value->: %f \n",inputs[i]);
 		// printf("hello");
 	} printf("\n< - - s p a c i n g - - >\n \n");
-	  
+
 
 	//create an array that will hold pointers
 	struct ANN_Node** layer = malloc(sizeof(struct ANN_Node* ) *num_Layers);
-	
+
 	//create an array of nodes
 	struct ANN_Node **arr = (struct ANN_Node **) malloc(sizeof(struct ANN_Node *) *num_Layers);
 
-	printf("\n bb_ANN output: %f \n",bb_ANN(numWeights2, num_Layers, num_Nodes, inputs)); 
-			
+	printf("\n bb_ANN output: %f \n",bb_ANN(numWeights2, num_Layers, num_Nodes, inputs));
+
 	return 0;
 }
-

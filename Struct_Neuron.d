@@ -47,7 +47,7 @@ class Neuron {
 			this.inputs = inputs;
 			this.weights = weights;
 			// f(x) = activateFunc(sum(prod(all_weights, all_inputs)))
-			this.output = sigmoid(sumProd(weights, inputs));
+			this.output = sigmoid(sumProd(this.weights, this.inputs));
 
 		}
 
@@ -62,34 +62,61 @@ class NeuralNetwork {
 	double[] weights;
 
 	// returns a neuron
-	auto neuronFactory(	double[] weights, double[] inputs){
+	auto neuronFactory(	double[] weights, double[] inputs) {
 		return new Neuron(weights, inputs);
 	}
 
+	public void setInputs(double[] inputs) { this.inputs = inputs; }
+	public void setWeights(double[] weights) {this.weights = weights; }
 
 // adds neurons to a layer
-	auto populateLayer(L...)(L Sizes){ // an attempted hack in the absence of optional params
-		if(Sizes.length==0 || !Sizes)
-		{ layer ~= neuronFactory(inputs,weights); }
-		if(Sizes.length > 1)
-		{ writeln("populateLayer() takes up to one argument"); return ;}
-		else {
-				writeln("Populating Layer");
+	Neuron[][] populateNetwork(int[] Sizes){ // an attempted hack in the absence of optional params (L...)(L Sizes)
+		if(Sizes.length == 0)
+		{
+			writeln("Default initialization");
+			this.layer ~= this.neuronFactory(this.inputs,this.weights);
+			this.topology ~= this.layer;
+		} else {
+				writeln("Populating Network");
 				foreach(size; Sizes){
+
 					// adding nodes to the layer
 					for(int i=0 ; i < size ; i++)
-					{ layer ~= neuronFactory(inputs,weights); }
+					{ this.layer ~= this.neuronFactory(this.inputs,this.weights); }
+
+					//adding layers to the topology
+					for(int j=0; j < Sizes.length ; j++)
+					{ this.topology ~= this.layer; }// whatever is in the layer atm, goes in topology
+
+					// empty layer Cache
+					this.layer = [];
 				}
+				writeln("Populating Network complete!");
 		}
-		return layer;
+
+		return this.topology;
 	}
 
-	void populateTopology(){
-		// adding layers to the topology
-		// for(int i = 0; i<)
-		return topology;
+	void display() { // this prints out the structure of the resulting topology
+
+
+		this.topology[0][0].getOutput.writeln;
+
+		// int count = 1;
+		// for ( int i=0; i < this.topology.length ;i++ ) {
+		// 	writeln("\n LAYER [",i,"] ! \n");
+		// 	for ( int j=0; j < this.topology[i].length ; j++, count++ ) {
+		// 		write("count[",count,"] ->");
+		// 		topology[i][j].getOutput.writeln;
+		// 	}
+		// }
+
 	}
 
+
+	this(int[] layer_sizes ) {
+		this.populateNetwork(layer_sizes);
+	}
 
 }
 
@@ -98,36 +125,43 @@ void main()
 	double[] weights = [0.0,0.1,0.5,1.5]; // randomize these
 	double[] inputs  = [1.1,0.6,0.4,0.5];
 
-	Neuron n1 = new Neuron(weights, inputs);
+	// Neuron n1 = new Neuron(weights, inputs);
+	//
+	// n1.output.writeln;
+	//
+	// Neuron[][] topology;
+	// Neuron[] layer;
 
-	n1.output.writeln;
-
-	Neuron[][] topology;
-	Neuron[] layer;
+	NeuralNetwork nn = new NeuralNetwork([3,3,3]);
+	nn.setWeights(weights);
+	nn.setInputs(inputs);
+	nn.weights.writeln;
+	nn.inputs.writeln;
+	nn.display();
 
 // adding nodes to the layer
-	for(int i=0;i<10;i++)
-	{
-		Neuron node = new Neuron(weights, inputs);
-		layer ~= node;
-	}
+	// for(int i=0;i<10;i++)
+	// {
+	// 	Neuron node = new Neuron(weights, inputs);
+	// 	layer ~= node;
+	// }
 
 // adding layers to the topology
-	for(int i=0;i<3;i++)
-	{
-		topology ~= layer;
-		writeln("layer length: ",topology[i].length);
-		writeln("number of layers: ", topology.length);
-	}
+	// for(int i=0;i<3;i++)
+	// {
+	// 	topology ~= layer;
+	// 	writeln("layer length: ",topology[i].length);
+	// 	writeln("number of layers: ", topology.length);
+	// }
+	//
+	// int count = 1;
+	// for ( int i=0; i<topology.length ;i++ ) {
+	// 	writeln("\n LAYER [",i,"] ! \n");
+	// 	for ( int j=0; j<topology[i].length ; j++, count++ ) {
+	// 		write("count[",count,"] ->");
+	// 		topology[i][j].getOutput.writeln;
+	// 	}
+	// }
 
-	int count = 1;
-	for ( int i=0; i<topology.length ;i++ ) {
-		writeln("\n LAYER [",i,"] ! \n");
-		for ( int j=0; j<topology[i].length ; j++, count++ ) {
-			write("count[",count,"] ->");
-			topology[i][j].getOutput.writeln;
-		}
-	}
-	// writeln();
 
 }
