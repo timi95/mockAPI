@@ -70,7 +70,7 @@ class NeuralNetwork {
 	public void setWeights(double[] weights) {this.weights = weights; }
 
 // adds neurons to a layer
-	Neuron[][] populateNetwork(int[] Sizes){ // an attempted hack in the absence of optional params (L...)(L Sizes)
+	Neuron[][] populateNetwork(int[] Sizes) { // an attempted hack in the absence of optional params (L...)(L Sizes)
 		if(Sizes.length == 0)
 		{
 			writeln("Default initialization");
@@ -78,19 +78,18 @@ class NeuralNetwork {
 			this.topology ~= this.layer;
 		} else {
 				writeln("Populating Network");
-				foreach(size; Sizes){
-
+				for(int n=0; n < Sizes.length; n++) {
 					// adding nodes to the layer
-					for(int i=0 ; i < size ; i++)
+					for(int i=0 ; i < Sizes[n] ; i++)
 					{ this.layer ~= this.neuronFactory(this.inputs,this.weights); }
 
 					//adding layers to the topology
-					for(int j=0; j < Sizes.length ; j++)
-					{ this.topology ~= this.layer; }// whatever is in the layer atm, goes in topology
+					 this.topology ~= this.layer;
 
 					// empty layer Cache
 					this.layer = [];
 				}
+
 				writeln("Populating Network complete!");
 		}
 
@@ -99,17 +98,20 @@ class NeuralNetwork {
 
 	void display() { // this prints out the structure of the resulting topology
 
+		writeln("\n\nTopology length: ",this.topology.length);
+		writeln("\nTopology structure: ",this.topology);
 
-		this.topology[0][0].getOutput.writeln;
 
-		// int count = 1;
-		// for ( int i=0; i < this.topology.length ;i++ ) {
-		// 	writeln("\n LAYER [",i,"] ! \n");
-		// 	for ( int j=0; j < this.topology[i].length ; j++, count++ ) {
-		// 		write("count[",count,"] ->");
-		// 		topology[i][j].getOutput.writeln;
-		// 	}
-		// }
+
+		writeln("\n\nTopology structure");
+		int count = 1;
+		for ( int i=0; i<this.topology.length ;i++ ) {
+			writeln("\n LAYER [",i,"] \n");
+			for ( int j=0; j<this.topology[i].length ; j++, count++ ) {
+				write("node[",count,"] ->",this.topology[i][j].getOutput," | ");
+			}
+			writeln;
+		}
 
 	}
 
@@ -125,43 +127,13 @@ void main()
 	double[] weights = [0.0,0.1,0.5,1.5]; // randomize these
 	double[] inputs  = [1.1,0.6,0.4,0.5];
 
-	// Neuron n1 = new Neuron(weights, inputs);
-	//
-	// n1.output.writeln;
-	//
-	// Neuron[][] topology;
-	// Neuron[] layer;
 
-	NeuralNetwork nn = new NeuralNetwork([3,3,3]);
+	NeuralNetwork nn = new NeuralNetwork([5,1,3]);
 	nn.setWeights(weights);
 	nn.setInputs(inputs);
 	nn.weights.writeln;
 	nn.inputs.writeln;
 	nn.display();
-
-// adding nodes to the layer
-	// for(int i=0;i<10;i++)
-	// {
-	// 	Neuron node = new Neuron(weights, inputs);
-	// 	layer ~= node;
-	// }
-
-// adding layers to the topology
-	// for(int i=0;i<3;i++)
-	// {
-	// 	topology ~= layer;
-	// 	writeln("layer length: ",topology[i].length);
-	// 	writeln("number of layers: ", topology.length);
-	// }
-	//
-	// int count = 1;
-	// for ( int i=0; i<topology.length ;i++ ) {
-	// 	writeln("\n LAYER [",i,"] ! \n");
-	// 	for ( int j=0; j<topology[i].length ; j++, count++ ) {
-	// 		write("count[",count,"] ->");
-	// 		topology[i][j].getOutput.writeln;
-	// 	}
-	// }
 
 
 }
