@@ -8,6 +8,7 @@ import std.string;
 import std.datetime;
 import std.process;
 import std.parallelism;
+import std.algorithm: remove;
 
 int numInputs(int a) { return a; }
 
@@ -97,11 +98,9 @@ class NeuralNetwork {
 	}
 
 	void display() { // this prints out the structure of the resulting topology
-
+		writeln("\n\nDisplaying !....");
 		writeln("\n\nTopology length: ",this.topology.length);
 		writeln("\nTopology structure: ",this.topology);
-
-
 
 		writeln("\n\nTopology structure");
 		int count = 1;
@@ -116,7 +115,7 @@ class NeuralNetwork {
 	}
 
 
-	this(int[] layer_sizes ) {
+	this(int[] layer_sizes=[] ) {
 		this.populateNetwork(layer_sizes);
 	}
 
@@ -128,12 +127,18 @@ void main()
 	double[] inputs  = [1.1,0.6,0.4,0.5];
 
 
-	NeuralNetwork nn = new NeuralNetwork([5,1,3]);
+	NeuralNetwork nn = new NeuralNetwork([2,1]);
 	nn.setWeights(weights);
 	nn.setInputs(inputs);
 	nn.weights.writeln;
 	nn.inputs.writeln;
+
 	nn.display();
+	writeln("Removing!");
+	nn.topology[0] = nn.topology[0].remove(1);
+	nn.display();
+
+
 
 
 }
