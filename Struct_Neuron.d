@@ -71,7 +71,7 @@ class NeuralNetwork {
 	public void setWeights(double[] weights) {this.weights = weights; }
 
 // adds neurons to a layer
-	Neuron[][] populateNetwork(int[] Sizes) { // an attempted hack in the absence of optional params (L...)(L Sizes)
+	Neuron[][] populateNetwork(int[] Sizes) {
 		if(Sizes.length == 0)
 		{
 			writeln("Default initialization");
