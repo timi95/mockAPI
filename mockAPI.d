@@ -217,7 +217,7 @@ void log_Event(string event_str ){
 }
 
 void fileWriting(string a ) {
-    // write(NewFile, a) ;
+    // write(NewFile, a);
     File file = File("NewFile.txt","w");
     file.writeln(a);
     file.close();
