@@ -44,7 +44,7 @@ class Neuron {
 			return this.output;
 		}
 
-		this(double[] weights, double[] inputs ) {
+		this(double[] weights, double[] inputs ) { // @suppress(dscanner.style.undocumented_declaration)
 			this.inputs = inputs;
 			this.weights = weights;
 			// f(x) = activateFunc(sum(prod(all_weights, all_inputs)))
@@ -137,8 +137,5 @@ void main()
 	writeln("Removing!");
 	nn.topology[0] = nn.topology[0].remove(1);
 	nn.display();
-
-
-
 
 }
