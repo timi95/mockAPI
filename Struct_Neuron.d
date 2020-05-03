@@ -12,7 +12,7 @@ import std.algorithm: remove;
 
 int numInputs(int a) { return a; }
 
-//Struct neuron model [inputs, sigmoid, output]
+//Struct neuron model [inputs, sigmoid, output] 
 class Neuron {
 
 		double[] inputs;
